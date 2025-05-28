@@ -40,6 +40,7 @@ export default function HomePage( ) {
         },
     }
     const [formData, setFormData] = useState(initialFormData)
+    const [hydrated, setHydrated] = useState(false);
 
     //Funktion för att uppdatera en  sektion av formuläret
     function updateSection(sectionKey, newSectionData) {
@@ -53,14 +54,24 @@ export default function HomePage( ) {
         // Vid första laddning, hämta ev. sparad ansökan
         const saved = localStorage.getItem('loanFormData')
         if (saved) {
-            setFormData(JSON.parse(saved))
+            try {
+                setFormData(JSON.parse(saved));
+            } catch (err) {
+                console.error('Kunde inte läsa sparad data:', err);
+            }
         }
+        setHydrated(true);
     }, [])
 
     useEffect(() => {
         //Spara alla förändringar i localstorage
-        localStorage.setItem('loanFormData', JSON.stringify(formData))
-    }, [formData])
+        if (!hydrated) return;
+        try {
+            localStorage.setItem('loanFormData', JSON.stringify(formData));
+        } catch (err) {
+            console.error('Kunde inte spara data:', err);
+        }
+    }, [formData, hydrated])
 
     //Funktion för att reseta formuläret efter skickad ansökan
     const resetForm = () => {
@@ -91,6 +102,7 @@ export default function HomePage( ) {
                     <Form3Debt 
                         data={formData.obligations}
                         updateSection={updateSection}
+                        hydrated={hydrated}
                     />} 
                 />
                 {/* Steg 5: Låneönskemål */}

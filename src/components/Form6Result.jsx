@@ -1,6 +1,9 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function Form6Result( {data} ) {
+export default function Form6Result( {data, resetForm} ) {
     const { income, obligations, request } = data;
+    const navigate = useNavigate();
 
     //Räknar ut ett beslut baserat på input data
     let decision = 'REVIEW'
@@ -25,6 +28,14 @@ export default function Form6Result( {data} ) {
         // Annars manuell översyn
         decision = 'REVIEW';
     }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            resetForm();
+        }, 5000);
+        return () => clearTimeout(timer);
+    }, [resetForm])
+
     return (
         <div className="result">
             <h2>Beslut på ansökan</h2>
@@ -37,6 +48,7 @@ export default function Form6Result( {data} ) {
             {decision === 'REVIEW' && (
                 <p>Din ansökan behöver <strong>vidare granskning</strong>. Vi kommer att kontakta dig så fort som möjligt.</p>
             )}
+            <button onClick={() => { resetForm(); navigate('/'); }}>Starta ny ansökan</button>
         </div>
     )
 }

@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -27,7 +27,7 @@ export default function Form2Income({ data, updateSection }) {
     });
 
     const {
-        register, handleSubmit, reset, formState: { errors }, watch
+        register, handleSubmit, setValue, reset, formState: { errors }, watch
     } = useForm({
             defaultValues: data, resolver: yupResolver(IncomeSchema)
         });
@@ -35,6 +35,27 @@ export default function Form2Income({ data, updateSection }) {
     useEffect(() => {
         reset(data);
     }, [data, reset]);
+
+    const isFirst = useRef(true);
+    useEffect(() => {
+        const storeFormInput = watch((values) => {
+            if(isFirst.current) {
+                isFirst.current = false;
+                return;
+            }
+            updateSection('income', values);
+        });
+        return () => storeFormInput.unsubscribe();
+    }, [watch, updateSection])
+
+    // När workstatus ändras, flippa `employed` bool
+    const workStatus = watch('workStatus');
+    useEffect(() => {
+        setValue('employed', workStatus === 'Anställd', {
+            shouldValidate: true,
+            shouldDirty: true
+        });
+    }, [workStatus, setValue]);
 
     // Varning för låg lön
     const salaryValue = watch('salary', data.salary);
@@ -51,7 +72,7 @@ export default function Form2Income({ data, updateSection }) {
         <h2>Inkomst</h2>
         <div className="form-field">
             <label htmlFor="workStatus">Sysselsättning</label>
-            <select id="workStatus" {...register('workStatus')}>
+            <select id="workStatus" {...register('workStatus')} defaultValue={data.workStatus}>
                 <option value="">-- Välj sysselsättning --</option>
                 <option value="Anställd">Anställd</option>
                 <option value="Egenföretagare">Egenföretagare</option>
@@ -61,12 +82,7 @@ export default function Form2Income({ data, updateSection }) {
             </select>
             {errors.workStatus && <p className="error">{errors.workStatus.message}</p>}
         </div>
-        <div className="form-field">
-            <label htmlFor="employed">
-            <input id="employed" type="checkbox" {...register('employed')} />
-                Är du heltidsanställd?
-            </label>
-        </div>
+        <input type="hidden" {...register('employed')} />
 
         {watch('employed') && (
             <>

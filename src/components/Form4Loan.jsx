@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function Form4Loan({ data, updateSection }) {
     const navigate = useNavigate();
@@ -20,7 +20,7 @@ export default function Form4Loan({ data, updateSection }) {
             .required('Ange återbetalningstid')
     });
 
-    const {register, handleSubmit, reset, formState: { errors } } = useForm({
+    const {register, handleSubmit, reset, watch, formState: { errors } } = useForm({
         defaultValues: data,
         resolver: yupResolver(RequestSchema)
     });
@@ -29,6 +29,18 @@ export default function Form4Loan({ data, updateSection }) {
     useEffect(() => {
         reset(data);
     }, [data, reset]);
+
+    const isFirst = useRef(true);
+    useEffect(() => {
+        const storeFormInput = watch((values) => {
+            if(isFirst.current) {
+                isFirst.current = false;
+                return;
+            }
+            updateSection('request', values);
+        });
+        return () => storeFormInput.unsubscribe();
+    }, [watch, updateSection])
 
     //Sparar input värden och navigerar vidare till nästa form onSubmit
     const onSubmit = (values) => {

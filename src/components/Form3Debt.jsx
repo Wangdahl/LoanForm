@@ -2,13 +2,12 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-export default function Form3Debt({ data, updateSection }) {
-
+export default function Form3Debt({ data, updateSection, hydrated }) {
     const navigate = useNavigate();
 
-    // Yup schema för validering
+    // Yup‐schema för validering
     const ObligationsSchema = Yup.object().shape({
         otherLoans: Yup.array().of(
             Yup.object().shape({
@@ -25,15 +24,26 @@ export default function Form3Debt({ data, updateSection }) {
             .required('Ange månadsutgifter')
     });
 
-    const { register, control, handleSubmit, reset, formState: { errors } } = useForm({
+    const {
+        register,
+        control,
+        handleSubmit,
+        reset,
+        getValues,
+        formState: { errors }
+    } = useForm({
         defaultValues: data,
         resolver: yupResolver(ObligationsSchema)
     });
 
-    //Återställer input vid omladdning
+    // Återställer input vid omladdning, endast en gång efter hydration
+    const didHydrateRef = useRef(false);
     useEffect(() => {
-        reset(data);
-    }, [data, reset]);
+        if (hydrated && !didHydrateRef.current) {
+            reset(data);
+            didHydrateRef.current = true;
+        }
+    }, [hydrated, reset, data]);
 
     // useFieldArray för dynamiska fält för övriga lån
     const { fields, append, remove } = useFieldArray({
@@ -41,7 +51,13 @@ export default function Form3Debt({ data, updateSection }) {
         name: 'otherLoans'
     });
 
-    //Sparar input värden och navigerar vidare till nästa form onSubmit
+    // Funktion som hämtar alla fältvärden och sparar i parent + localStorage
+    const handleFieldChange = () => {
+        const vals = getValues();
+        updateSection('obligations', vals);
+    };
+
+    // Sparar input­värden och navigerar vidare till nästa form onSubmit
     const onSubmit = (values) => {
         updateSection('obligations', values);
         navigate('/lan');
@@ -56,25 +72,44 @@ export default function Form3Debt({ data, updateSection }) {
                     <div className="loans-list">
                         {fields.map((field, index) => (
                             <div key={field.id} className="loan-item">
-                                <select {...register(`otherLoans.${index}.type`)} defaultValue={field.type || ''}>
+                                <select
+                                    defaultValue={field.type}
+                                    {...register(`otherLoans.${index}.type`, {
+                                        onChange: handleFieldChange
+                                    })}
+                                >
                                     <option value="">-- Välj lånetyp --</option>
                                     <option value="Bostadslån">Bostadslån</option>
                                     <option value="Billån">Billån</option>
                                     <option value="Blancolån">Blancolån</option>
                                     <option value="Studielån">Studielån</option>
                                 </select>
-                                <input 
-                                    type="number" 
-                                    step="1" 
-                                    {...register(`otherLoans.${index}.amount`)} 
-                                    placeholder="Belopp (SEK)" 
-                                    defaultValue={field.amount || ''} 
+                                <input
+                                    type="number"
+                                    step="1"
+                                    placeholder="Belopp (SEK)"
+                                    defaultValue={field.amount}
+                                    {...register(`otherLoans.${index}.amount`, {
+                                        onChange: handleFieldChange
+                                    })}
                                 />
-                                <button type="button" onClick={() => remove(index)}>Ta bort</button>
-                                {errors.otherLoans && errors.otherLoans[index] && (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        remove(index);
+                                        handleFieldChange();
+                                    }}
+                                >
+                                    Ta bort
+                                </button>
+                                {errors.otherLoans?.[index] && (
                                     <div className="error-group">
-                                        {errors.otherLoans[index].type && <p className="error">{errors.otherLoans[index].type.message}</p>}
-                                        {errors.otherLoans[index].amount && <p className="error">{errors.otherLoans[index].amount.message}</p>}
+                                        {errors.otherLoans[index].type && (
+                                            <p className="error">{errors.otherLoans[index].type.message}</p>
+                                        )}
+                                        {errors.otherLoans[index].amount && (
+                                            <p className="error">{errors.otherLoans[index].amount.message}</p>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -83,17 +118,36 @@ export default function Form3Debt({ data, updateSection }) {
                 ) : (
                     <p>Inga andra lån tillagda</p>
                 )}
-                <button type="button" onClick={() => append({ type: '', amount: '' })}>
+                <button
+                    type="button"
+                    onClick={() => {
+                        append({ type: '', amount: '' });
+                        handleFieldChange();
+                    }}
+                >
                     Lägg till lån
                 </button>
             </fieldset>
+
             <div className="form-field">
                 <label htmlFor="monthlyExpenses">Månadsutgifter (SEK)</label>
-                <input id="monthlyExpenses" {...register('monthlyExpenses')} type="number" />
-                {errors.monthlyExpenses && <p className="error">{errors.monthlyExpenses.message}</p>}
+                <input
+                    id="monthlyExpenses"
+                    type="number"
+                    defaultValue={data.monthlyExpenses}
+                    {...register('monthlyExpenses', {
+                        onChange: handleFieldChange
+                    })}
+                />
+                {errors.monthlyExpenses && (
+                    <p className="error">{errors.monthlyExpenses.message}</p>
+                )}
             </div>
+
             <div className="form-navigation">
-                <button type="button" onClick={() => navigate('/inkomst')}>Tillbaka</button>
+                <button type="button" onClick={() => navigate('/inkomst')}>
+                    Tillbaka
+                </button>
                 <button type="submit">Nästa</button>
             </div>
         </form>

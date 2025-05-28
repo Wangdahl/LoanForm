@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -38,7 +38,7 @@ export default function Form1Personal({data, updateSection}) {
         address: Yup.string().required('Ange adress')
     });
 
-    const { register, handleSubmit, reset, formState: { errors }} = useForm({
+    const { register, handleSubmit, reset, watch, formState: { errors }} = useForm({
         defaultValues: data,
         resolver: yupResolver(PersonalSchema)
     })
@@ -48,6 +48,17 @@ export default function Form1Personal({data, updateSection}) {
         reset(data);
     }, [data, reset]);
 
+    const isFirst = useRef(true);
+    useEffect(() => {
+        const storeFormInput = watch((values) => {
+            if(isFirst.current) {
+                isFirst.current = false;
+                return;
+            }
+            updateSection('personal', values);
+        });
+        return () => storeFormInput.unsubscribe();
+    }, [watch, updateSection])
 
     //Sparar input värden och navigerar vidare till nästa form onSubmit
     const onSubmit = (values) => {
