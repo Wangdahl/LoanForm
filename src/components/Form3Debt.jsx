@@ -3,6 +3,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
+import '../styles/Forms.css'
 
 export default function Form3Debt({ data, updateSection, hydrated }) {
     const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function Form3Debt({ data, updateSection, hydrated }) {
             })
         ),
         monthlyExpenses: Yup.number()
-            .typeError('Ange en siffra')
+            .typeError('Ange siffra för månadsutgifter')
             .min(0, 'Kan inte vara negativt')
             .required('Ange månadsutgifter')
     });
@@ -64,92 +65,96 @@ export default function Form3Debt({ data, updateSection, hydrated }) {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <h2>Övriga lån och kostnader</h2>
-            <fieldset className="form-field">
-                <legend>Andra lån</legend>
-                {fields.length > 0 ? (
-                    <div className="loans-list">
-                        {fields.map((field, index) => (
-                            <div key={field.id} className="loan-item">
-                                <select
-                                    defaultValue={field.type}
-                                    {...register(`otherLoans.${index}.type`, {
-                                        onChange: handleFieldChange
-                                    })}
-                                >
-                                    <option value="">-- Välj lånetyp --</option>
-                                    <option value="Bostadslån">Bostadslån</option>
-                                    <option value="Billån">Billån</option>
-                                    <option value="Blancolån">Blancolån</option>
-                                    <option value="Studielån">Studielån</option>
-                                </select>
-                                <input
-                                    type="number"
-                                    step="1"
-                                    placeholder="Belopp (SEK)"
-                                    defaultValue={field.amount}
-                                    {...register(`otherLoans.${index}.amount`, {
-                                        onChange: handleFieldChange
-                                    })}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        remove(index);
-                                        handleFieldChange();
-                                    }}
-                                >
-                                    Ta bort
-                                </button>
-                                {errors.otherLoans?.[index] && (
-                                    <div className="error-group">
-                                        {errors.otherLoans[index].type && (
-                                            <p className="error">{errors.otherLoans[index].type.message}</p>
-                                        )}
-                                        {errors.otherLoans[index].amount && (
-                                            <p className="error">{errors.otherLoans[index].amount.message}</p>
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+        <div className="form-container">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <h2>Övriga lån och kostnader</h2>
+                <fieldset className="form-field">
+                    {fields.length > 0 ? (
+                        <div className="loans-list">
+                            {fields.map((field, index) => (
+                                <div key={field.id} className="loan-item">
+                                    <select
+                                        defaultValue={field.type}
+                                        {...register(`otherLoans.${index}.type`, {
+                                            onChange: handleFieldChange
+                                        })}
+                                    >
+                                        <option value="">-- Välj lånetyp --</option>
+                                        <option value="Bostadslån">Bostadslån</option>
+                                        <option value="Billån">Billån</option>
+                                        <option value="Blancolån">Blancolån</option>
+                                        <option value="Studielån">Studielån</option>
+                                    </select>
+                                    <input
+                                        type="number"
+                                        step="1"
+                                        placeholder="Belopp (SEK)"
+                                        defaultValue={field.amount}
+                                        {...register(`otherLoans.${index}.amount`, {
+                                            onChange: handleFieldChange
+                                        })}
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            remove(index);
+                                            handleFieldChange();
+                                        }}
+                                    >
+                                        Ta bort
+                                    </button>
+                                    {errors.otherLoans?.[index] && (
+                                        <div className="error-group">
+                                            {errors.otherLoans[index].type && (
+                                                <p className="error">{errors.otherLoans[index].type.message}</p>
+                                            )}
+                                            {errors.otherLoans[index].amount && (
+                                                <p className="error">{errors.otherLoans[index].amount.message}</p>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <p>Inga andra lån tillagda</p>
+                    )}
+                    <div className='add-loan-wrapper'>
+                        <button
+                            type="button"
+                            onClick={() => {
+                                append({ type: '', amount: '' });
+                                handleFieldChange();
+                            }}
+                            className='add-loan-btn'
+                        >
+                            Lägg till lån
+                        </button>
                     </div>
-                ) : (
-                    <p>Inga andra lån tillagda</p>
-                )}
-                <button
-                    type="button"
-                    onClick={() => {
-                        append({ type: '', amount: '' });
-                        handleFieldChange();
-                    }}
-                >
-                    Lägg till lån
-                </button>
-            </fieldset>
+                </fieldset>
 
-            <div className="form-field">
-                <label htmlFor="monthlyExpenses">Månadsutgifter (SEK)</label>
-                <input
-                    id="monthlyExpenses"
-                    type="number"
-                    defaultValue={data.monthlyExpenses}
-                    {...register('monthlyExpenses', {
-                        onChange: handleFieldChange
-                    })}
-                />
-                {errors.monthlyExpenses && (
-                    <p className="error">{errors.monthlyExpenses.message}</p>
-                )}
-            </div>
+                <div className="form-field">
+                    <label htmlFor="monthlyExpenses">Månadsutgifter (SEK)</label>
+                    <input
+                        id="monthlyExpenses"
+                        type="number"
+                        defaultValue={data.monthlyExpenses}
+                        {...register('monthlyExpenses', {
+                            onChange: handleFieldChange
+                        })}
+                    />
+                    {errors.monthlyExpenses && (
+                        <p className="error">{errors.monthlyExpenses.message}</p>
+                    )}
+                </div>
 
-            <div className="form-navigation">
-                <button type="button" onClick={() => navigate('/inkomst')}>
-                    Tillbaka
-                </button>
-                <button type="submit">Nästa</button>
-            </div>
-        </form>
+                <div className="form-navigation">
+                    <button type="button" onClick={() => navigate('/inkomst')}>
+                        Tillbaka
+                    </button>
+                    <button type="submit">Nästa</button>
+                </div>
+            </form>
+        </div>
     );
 }

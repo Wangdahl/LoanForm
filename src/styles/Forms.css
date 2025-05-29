@@ -1,0 +1,104 @@
+.form-container {
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    margin: 2rem auto 0 auto;
+    background-color: var(--background-color-trans);
+    width: 100%;
+    max-width: 500px;
+    border-radius: 0.5rem;
+    min-height: 600px;
+    margin-bottom: 1rem;
+}
+h2 {
+    margin: 2rem auto 1rem;
+}
+h3 {
+    padding-top: 0.5rem;
+}
+form {
+    min-height: 100%;
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+}
+input, select, textarea {
+    border: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    width: 200px;
+}
+fieldset {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.add-loan-wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.form-field, .loan-item {
+    padding: 0.5rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.warning, .error {
+    color: red;
+    font-size: 0.9rem;
+}
+.form-navigation {
+    bottom: 1rem;
+    width: 100%;
+    top: auto;
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+}
+button {
+    padding: 0.4rem 0.7rem;
+}
+.form-navigation button {
+    width: 80px;
+}
+.next-btn {
+    justify-self: flex-end;
+    margin-left: auto;
+}
+
+/* Start form */
+.start-form-cont {
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+.start-form-cont button {
+    margin-top: 6rem;
+}
+
+/* Summary */
+
+.summary, .result {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    width: 90%;
+}
+.summary ul {
+    list-style: none;
+}
+.margin {
+    margin-bottom: 1rem;
+}
+
+/* Result */
+.go-to-start-btn {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+}

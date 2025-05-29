@@ -49,27 +49,29 @@ export default function Form4Loan({ data, updateSection }) {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <h2>Önskat lån</h2>
-            <div className='form-field'>
-                <label htmlFor="amount">Önskat belopp (SEK)</label>
-                <input id='amount' {...register('amount')} type='number' />
-                {errors.amount && <p className='error'>{errors.amount.message}</p>}
-            </div>
-            <div className="form-field">
-                <label htmlFor="purpose">Syfte med lånet</label>
-                <input id="purpose" {...register('purpose')} type="text" />
-                {errors.purpose && <p className="error">{errors.purpose.message}</p>}
-            </div>
-            <div className="form-field">
-                <label htmlFor="termYears">Återbetalningstid (år)</label>
-                <input id="termYears" {...register('termYears')} type="number" />
-                {errors.termYears && <p className="error">{errors.termYears.message}</p>}
-            </div>
-            <div className="form-navigation">
-                <button type="button" onClick={() => navigate('/skulder')}>Tillbaka</button>
-                <button type="submit">Nästa</button>
-            </div>
-        </form>
+        <div className="form-container">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <h2>Önskat lån</h2>
+                <div className='form-field'>
+                    <label htmlFor="amount">Önskat belopp (SEK)</label>
+                    <input id='amount' {...register('amount')} type='number' />
+                    {errors.amount && <p className='error'>{errors.amount.message}</p>}
+                </div>
+                <div className="form-field">
+                    <label htmlFor="purpose">Syfte med lånet</label>
+                    <input id="purpose" {...register('purpose')} type="text" />
+                    {errors.purpose && <p className="error">{errors.purpose.message}</p>}
+                </div>
+                <div className="form-field">
+                    <label htmlFor="termYears">Återbetalningstid (år)</label>
+                    <input id="termYears" {...register('termYears')} type="number" />
+                    {errors.termYears && <p className="error">{errors.termYears.message}</p>}
+                </div>
+                <div className="form-navigation">
+                    <button type="button" onClick={() => navigate('/skulder')}>Tillbaka</button>
+                    <button type="submit">Nästa</button>
+                </div>
+            </form>
+        </div>
     )
 }

@@ -1,10 +1,12 @@
-
+import '../styles/Header.css'
 
 export default function Header() {
 
     return (
         <header>
-            Header
+            <div className='heading-container'>
+                <h1>Skuldsatt.se</h1>
+            </div>
         </header>
     )
 }

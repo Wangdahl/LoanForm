@@ -37,18 +37,22 @@ export default function Form6Result( {data, resetForm} ) {
     }, [resetForm])
 
     return (
-        <div className="result">
-            <h2>Beslut på ansökan</h2>
-            {decision === 'APPROVE' && (
-                <p>Grattis! Din låneansökan är preliminärt <strong>godkänd</strong>. Vi kontaktar dig med vidare information.</p>
-            )}
-            {decision === 'DECLINE' && (
-                <p>Tyvärr, din låneansökan har <strong>avslagits</strong>.</p>
-            )}
-            {decision === 'REVIEW' && (
-                <p>Din ansökan behöver <strong>vidare granskning</strong>. Vi kommer att kontakta dig så fort som möjligt.</p>
-            )}
-            <button onClick={() => { resetForm(); navigate('/'); }}>Starta ny ansökan</button>
+        <div className="form-container">
+            <div className="result">
+                <h2>Beslut på ansökan</h2>
+                {decision === 'APPROVE' && (
+                    <p>Grattis! Din låneansökan är preliminärt <strong>godkänd</strong>. Vi kontaktar dig med vidare information.</p>
+                )}
+                {decision === 'DECLINE' && (
+                    <p>Tyvärr, din låneansökan har <strong>avslagits</strong>.</p>
+                )}
+                {decision === 'REVIEW' && (
+                    <p>Din ansökan behöver <strong>vidare granskning</strong>. Vi kommer att kontakta dig så fort som möjligt.</p>
+                )}
+                <div className='go-to-start-btn'>
+                    <button onClick={() => { resetForm(); navigate('/'); }}>Gå till startsidan</button>
+                </div>
+            </div>
         </div>
     )
 }

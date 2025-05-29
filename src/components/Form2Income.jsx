@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
+import '../styles/Forms.css';
 
 export default function Form2Income({ data, updateSection }) {
     const navigate = useNavigate();
@@ -68,67 +69,69 @@ export default function Form2Income({ data, updateSection }) {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-        <h2>Inkomst</h2>
-        <div className="form-field">
-            <label htmlFor="workStatus">Sysselsättning</label>
-            <select id="workStatus" {...register('workStatus')} defaultValue={data.workStatus}>
-                <option value="">-- Välj sysselsättning --</option>
-                <option value="Anställd">Anställd</option>
-                <option value="Egenföretagare">Egenföretagare</option>
-                <option value="Student">Student</option>
-                <option value="Arbetslös">Arbetslös</option>
-                <option value="Pensionär">Pensionär</option>
-            </select>
-            {errors.workStatus && <p className="error">{errors.workStatus.message}</p>}
+        <div className="form-container">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <h2>Inkomst</h2>
+                <div className="form-field">
+                    <label htmlFor="workStatus">Sysselsättning</label>
+                    <select id="workStatus" {...register('workStatus')} defaultValue={data.workStatus}>
+                        <option value="">-- Välj sysselsättning --</option>
+                        <option value="Anställd">Anställd</option>
+                        <option value="Egenföretagare">Egenföretagare</option>
+                        <option value="Student">Student</option>
+                        <option value="Arbetslös">Arbetslös</option>
+                        <option value="Pensionär">Pensionär</option>
+                    </select>
+                    {errors.workStatus && <p className="error">{errors.workStatus.message}</p>}
+                </div>
+                <input type="hidden" {...register('employed')} />
+
+                {watch('employed') && (
+                    <>
+                    <div className="form-field">
+                        <label htmlFor="employerName">Arbetsgivare</label>
+                        <input
+                            id="employerName"
+                            type="text"
+                            {...register('employerName')}
+                        />
+                        {errors.employerName && <p className="error">{errors.employerName.message}</p>}
+                    </div>
+
+                    <div className="form-field">
+                        <label htmlFor="jobTitle">Befattning</label>
+                        <input
+                            id="jobTitle"
+                            type="text"
+                            {...register('jobTitle')}
+                        />
+                            {errors.jobTitle && <p className="error">{errors.jobTitle.message}</p>}
+                    </div>
+                    </>
+                )}
+
+                <div className="form-field">
+                    <label htmlFor="salary">Månadslön (SEK)</label>
+                    <input id="salary" type="number" {...register('salary')} />
+                    {errors.salary && <p className="error">{errors.salary.message}</p>}
+                </div>
+                    {showLowSalaryWarning && <p className="warning">Din lön är för låg för kreditvärdighet.</p>}
+
+                <div className="form-field">
+                    <label htmlFor="message">Meddelande (valfritt)</label>
+                    <textarea
+                        id="message"
+                        rows="3"
+                        {...register('message')}
+                    ></textarea>
+                        {errors.message && <p className="error">{errors.message.message}</p>}
+                </div>
+
+                <div className="form-navigation">
+                    <button type="button" onClick={() => navigate('/personligt')}>Tillbaka</button>
+                    <button type="submit">Nästa</button>
+                </div>
+            </form>
         </div>
-        <input type="hidden" {...register('employed')} />
-
-        {watch('employed') && (
-            <>
-            <div className="form-field">
-                <label htmlFor="employerName">Arbetsgivare</label>
-                <input
-                    id="employerName"
-                    type="text"
-                    {...register('employerName')}
-                />
-                {errors.employerName && <p className="error">{errors.employerName.message}</p>}
-            </div>
-
-            <div className="form-field">
-                <label htmlFor="jobTitle">Befattning</label>
-                <input
-                    id="jobTitle"
-                    type="text"
-                    {...register('jobTitle')}
-                />
-                    {errors.jobTitle && <p className="error">{errors.jobTitle.message}</p>}
-            </div>
-            </>
-        )}
-
-        <div className="form-field">
-            <label htmlFor="salary">Månadslön (SEK)</label>
-            <input id="salary" type="number" {...register('salary')} />
-            {errors.salary && <p className="error">{errors.salary.message}</p>}
-            {showLowSalaryWarning && <p className="warning">Din lön är för låg för kreditvärdighet.</p>}
-        </div>
-
-        <div className="form-field">
-            <label htmlFor="message">Meddelande (valfritt)</label>
-            <textarea
-                id="message"
-                rows="3"
-                {...register('message')}
-            ></textarea>
-                {errors.message && <p className="error">{errors.message.message}</p>}
-        </div>
-
-        <div className="form-navigation">
-            <button type="button" onClick={() => navigate('/personligt')}>Tillbaka</button>
-            <button type="submit">Nästa</button>
-        </div>
-        </form>
     );
 }

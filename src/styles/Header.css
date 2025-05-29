@@ -1,0 +1,12 @@
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary-color);
+}
+.heading-container {
+    text-align: left;
+    width: 100%;
+    margin: 0.8rem 10%;
+    overflow: hidden;
+}

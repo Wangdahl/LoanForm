@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
-
+import '../styles/Forms.css';
 
 export default function Form1Personal({data, updateSection}) {
     const navigate = useNavigate()
@@ -67,35 +67,38 @@ export default function Form1Personal({data, updateSection}) {
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)} noValidate>
-            <div className="form-field">
-                <label htmlFor="name">Namn</label>
-                <input id="name" {...register('name')} type="text" />
-                {errors.name && <p className="error">{errors.name.message}</p>}
-            </div>
-            <div className="form-field">
-                <label htmlFor="personalNumber">Personnummer</label>
-                <input id="personalNumber" {...register('personalNumber')} type="text" />
-                {errors.personalNumber && <p className="error">{errors.personalNumber.message}</p>}
-            </div>
-            <div className="form-field">
-                <label htmlFor="phone">Telefon</label>
-                <input id="phone" {...register('phone')} type="tel" />
-                {errors.phone && <p className="error">{errors.phone.message}</p>}
-            </div>
-            <div className="form-field">
-                <label htmlFor="email">E-post</label>
-                <input id="email" {...register('email')} type="email" />
-                {errors.email && <p className="error">{errors.email.message}</p>}
-            </div>
-            <div className="form-field">
-                <label htmlFor="address">Adress</label>
-                <input id="address" {...register('address')} type="text" />
-                {errors.address && <p className="error">{errors.address.message}</p>}
-            </div>
-            <div className="form-navigation">
-                <button type="submit">Nästa</button>
-            </div>
-        </form>
+        <div className="form-container">
+            <form onSubmit={handleSubmit(onSubmit)} noValidate>
+                <h2>Personuppgifter</h2>
+                <div className="form-field">
+                    <label htmlFor="name">Namn</label>
+                    <input id="name" {...register('name')} type="text" />
+                    {errors.name && <p className="error">{errors.name.message}</p>}
+                </div>
+                <div className="form-field">
+                    <label htmlFor="personalNumber">Personnummer</label>
+                    <input id="personalNumber" {...register('personalNumber')} type="text" />
+                    {errors.personalNumber && <p className="error">{errors.personalNumber.message}</p>}
+                </div>
+                <div className="form-field">
+                    <label htmlFor="phone">Telefon</label>
+                    <input id="phone" {...register('phone')} type="tel" />
+                    {errors.phone && <p className="error">{errors.phone.message}</p>}
+                </div>
+                <div className="form-field">
+                    <label htmlFor="email">E-post</label>
+                    <input id="email" {...register('email')} type="email" />
+                    {errors.email && <p className="error">{errors.email.message}</p>}
+                </div>
+                <div className="form-field">
+                    <label htmlFor="address">Adress</label>
+                    <input id="address" {...register('address')} type="text" />
+                    {errors.address && <p className="error">{errors.address.message}</p>}
+                </div>
+                <div className="form-navigation">
+                    <button className='next-btn' type="submit">Nästa</button>
+                </div>
+            </form>
+        </div>
     );
 }

@@ -7,6 +7,9 @@ import Form3Debt from '../components/Form3Debt'
 import Form4Loan from '../components/Form4Loan'
 import Form5Review from '../components/Form5Review'
 import Form6Result from '../components/Form6Result'
+import coinsImg from '../assets/coins.jpg';
+
+import '../styles/HomePage.css'
 
 
 export default function HomePage( ) {
@@ -80,6 +83,9 @@ export default function HomePage( ) {
     }
     return (
         <main>
+            <div className='bg-img-container'>
+                <img src={coinsImg} alt="stacks of coins" className='bg-img'/>
+            </div>
             <Routes>
                 {/* Steg 1: Start */}
                 <Route index element={<StartForm />} />
