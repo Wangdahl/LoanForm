@@ -94,6 +94,7 @@ export default function HomePage( ) {
                     <Form1Personal 
                         data={formData.personal}
                         updateSection={updateSection}
+                        hydrated={hydrated}
                     />} 
                 />
                 {/* Steg 3: Inkomst */}
@@ -101,6 +102,7 @@ export default function HomePage( ) {
                     <Form2Income 
                         data={formData.income}
                         updateSection={updateSection}
+                        hydrated={hydrated}
                     />}
                 />
                 {/* Steg 4: Skulder */}
@@ -116,6 +118,7 @@ export default function HomePage( ) {
                     <Form4Loan
                         data={formData.request}
                         updateSection={updateSection}
+                        hydrated={hydrated}
                     />} 
                 />
                 {/* Steg 6: Granskning */}

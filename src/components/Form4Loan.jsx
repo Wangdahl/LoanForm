@@ -4,7 +4,7 @@ import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef } from 'react';
 
-export default function Form4Loan({ data, updateSection }) {
+export default function Form4Loan({ data, updateSection, hydrated }) {
     const navigate = useNavigate();
 
     // Yup schema för validering
@@ -25,11 +25,16 @@ export default function Form4Loan({ data, updateSection }) {
         resolver: yupResolver(RequestSchema)
     });
 
-    //Återställer input vid omladdning
+    // Reset en gång efter hydration
+    const didHydrateRef = useRef(false);
     useEffect(() => {
-        reset(data);
-    }, [data, reset]);
+        if (hydrated && !didHydrateRef.current) {
+            reset(data);
+            didHydrateRef.current = true;
+        }
+    }, [hydrated, reset, data]);
 
+    // Live-spara ändringar
     const isFirst = useRef(true);
     useEffect(() => {
         const storeFormInput = watch((values) => {

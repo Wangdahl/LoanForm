@@ -5,10 +5,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import '../styles/Forms.css';
 
-export default function Form1Personal({data, updateSection}) {
+export default function Form1Personal({data, updateSection, hydrated}) {
     const navigate = useNavigate()
 
-    //Yup validering för personuppgifter
+    // Definiera valideringsschema med Yup
     const PersonalSchema = Yup.object().shape({
         name: Yup.string().required('Ange namn'),
         personalNumber: Yup.string()
@@ -38,16 +38,22 @@ export default function Form1Personal({data, updateSection}) {
         address: Yup.string().required('Ange adress')
     });
 
+    // Initiera React Hook Form
     const { register, handleSubmit, reset, watch, formState: { errors }} = useForm({
         defaultValues: data,
         resolver: yupResolver(PersonalSchema)
     })
 
-    //Återställer input vid omladdning
+    // Återställ formuläret en gång efter hydration från LocalStorage
+    const didHydrateRef = useRef(false);
     useEffect(() => {
-        reset(data);
-    }, [data, reset]);
+        if (hydrated && !didHydrateRef.current) {
+            reset(data);
+            didHydrateRef.current = true;
+        }
+    }, [hydrated, reset, data]);
 
+    // Live-spara varje ändring efter första render
     const isFirst = useRef(true);
     useEffect(() => {
         const storeFormInput = watch((values) => {
@@ -73,28 +79,28 @@ export default function Form1Personal({data, updateSection}) {
                 <div className="form-field">
                     <label htmlFor="name">Namn</label>
                     <input id="name" {...register('name')} type="text" />
-                    {errors.name && <p className="error">{errors.name.message}</p>}
                 </div>
+                    {errors.name && <p className="error">{errors.name.message}</p>}
                 <div className="form-field">
                     <label htmlFor="personalNumber">Personnummer</label>
                     <input id="personalNumber" {...register('personalNumber')} type="text" />
-                    {errors.personalNumber && <p className="error">{errors.personalNumber.message}</p>}
                 </div>
+                    {errors.personalNumber && <p className="error">{errors.personalNumber.message}</p>}
                 <div className="form-field">
                     <label htmlFor="phone">Telefon</label>
                     <input id="phone" {...register('phone')} type="tel" />
-                    {errors.phone && <p className="error">{errors.phone.message}</p>}
                 </div>
+                    {errors.phone && <p className="error">{errors.phone.message}</p>}
                 <div className="form-field">
                     <label htmlFor="email">E-post</label>
                     <input id="email" {...register('email')} type="email" />
-                    {errors.email && <p className="error">{errors.email.message}</p>}
                 </div>
+                    {errors.email && <p className="error">{errors.email.message}</p>}
                 <div className="form-field">
                     <label htmlFor="address">Adress</label>
                     <input id="address" {...register('address')} type="text" />
-                    {errors.address && <p className="error">{errors.address.message}</p>}
                 </div>
+                    {errors.address && <p className="error">{errors.address.message}</p>}
                 <div className="form-navigation">
                     <button className='next-btn' type="submit">Nästa</button>
                 </div>

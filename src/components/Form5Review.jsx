@@ -5,6 +5,7 @@ export default function Form5Review({ data }) {
     const navigate = useNavigate();
     const { personal, income, obligations, request } = data;
 
+    // Bekräfta-knapp printar till console
     const handleConfirm = () => {
         console.log('Full form data: ', data);
         navigate('/resultat');

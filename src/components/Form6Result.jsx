@@ -1,9 +1,20 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Form6Result( {data, resetForm} ) {
     const { income, obligations, request } = data;
     const navigate = useNavigate();
+
+    // State för loading-animation
+    const [loading, setLoading] = useState(true);
+
+    // Simulera API-anrop med setTimeout för loading
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 2000); // 2 sekunders simulering
+        return () => clearTimeout(timer);
+    }, []);
 
     //Räknar ut ett beslut baserat på input data
     let decision = 'REVIEW'
@@ -29,12 +40,17 @@ export default function Form6Result( {data, resetForm} ) {
         decision = 'REVIEW';
     }
 
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            resetForm();
-        }, 5000);
-        return () => clearTimeout(timer);
-    }, [resetForm])
+    // Endast rendera loading-komponent under simulering
+    if (loading) {
+        return (
+        <div className="form-container">
+            <div className="loading-container">
+                <div className="spinner"></div>
+                <h2>Laddar beslut...</h2>
+            </div>
+        </div>
+        );
+    }
 
     return (
         <div className="form-container">
